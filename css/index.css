@@ -1,3 +1,20 @@
 body{
     background-color: blanchedalmond;
 }
+div{
+    margin:5px;
+}
+
+.btnPublicarTarea{
+    align-items: center !important;
+    border-radius: 20px !important;
+    text-align: center;
+    justify-content: center;
+}
+
+#descripcionTarea{
+    margin: 2px !important;
+    width: 450px;
+    height:80px;
+
+}
