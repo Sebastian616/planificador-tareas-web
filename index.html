@@ -1,65 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/navbar.css">
-    <link rel="stylesheet" href="./css/index.css">
-    <title>HOME</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificador de tareas</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./css/index.css">
 </head>
-
 <body>
-    <div id="navbarGeneral"></div>
-    <section>
-        <form class="formulario-tarea">
-            <div class="form-group">
-                <label for="exampleInputEmail1"> Nombre </label>
-                <input type="text" class="form-control" id="nombreTarea" aria-describedby="emailHelp"
-                    placeholder="Ingrese su nombre">
-            </div>
-            <div class="form-group">
-                <label for="fechaEntrega">Fecha de entrega de la tarea</label>
-                <input type="date" class="form-control" id="fechaEntrega">
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1"> ¿la tarea ha sido entregada?</label>
-            </div>
-            <div>
-                <label for="descripcionTarea" id="descripcionTarea"> descripcion </label>
-            </div>
-            <div>
-                <textarea id="descripcionTarea"></textarea>
-            </div>
-            <div class="d-flex justify-content-center">
-                <button type="submit" id="btnPublicarTarea" class="btn btn-primary text-center">
-                    Publica tu tarea
-                </button>
-            </div>
-        </form>
-    </section>
-    <section>
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Nombre de la tarea</h5>
-                <h6 class="card-subtitle mb-2 text-muted">descripcion</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's
-                    content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div>
+
+<div class="notebook">
+
+  <!-- LOMO / RAIL LATERAL -->
+  <aside class="spine">
+    <div class="spine-brand">
+      <span class="spine-mark">Ta</span>
+      <span class="spine-word">reas</span>
+    </div>
+
+    <nav class="spine-tabs" id="viewTabs">
+      <button class="spine-tab is-active" data-view="today">
+        <span class="tab-label">Hoy</span>
+        <span class="tab-count" id="countToday">0</span>
+      </button>
+      <button class="spine-tab" data-view="upcoming">
+        <span class="tab-label">Próximas</span>
+        <span class="tab-count" id="countUpcoming">0</span>
+      </button>
+      <button class="spine-tab" data-view="all">
+        <span class="tab-label">Todas</span>
+        <span class="tab-count" id="countAll">0</span>
+      </button>
+      <button class="spine-tab" data-view="done">
+        <span class="tab-label">Hechas</span>
+        <span class="tab-count" id="countDone">0</span>
+      </button>
+    </nav>
+
+    <div class="spine-progress">
+      <svg viewBox="0 0 64 64" class="progress-ring" aria-hidden="true">
+        <circle cx="32" cy="32" r="27" class="ring-track"/>
+        <circle cx="32" cy="32" r="27" class="ring-fill" id="ringFill"/>
+      </svg>
+      <div class="progress-text">
+        <span id="progressPercent">0%</span>
+        <small>del día</small>
+      </div>
+    </div>
+  </aside>
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="page">
+
+    <header class="page-head">
+      <div>
+        <p class="head-eyebrow" id="headSubtitle">Buen inicio de semana</p>
+        <h1 class="head-date" id="headDate">Cargando…</h1>
+      </div>
+      <button class="btn-add" id="btnAddTask">
+        <span class="plus">+</span> Nueva tarea
+      </button>
+    </header>
+
+    <div class="ruled-list" id="taskList">
+      <!-- filas de tareas generadas por JS -->
+    </div>
+
+    <div class="empty-state d-none" id="emptyState">
+      <p class="empty-title">La página está en blanco.</p>
+      <p class="empty-body">Escribe la primera tarea del día y dale forma a tu jornada.</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- PANEL LATERAL: NUEVA / EDITAR TAREA -->
+<div class="task-panel" id="taskPanel">
+  <div class="task-panel-inner">
+    <div class="panel-head">
+      <h2 id="panelTitle">Nueva tarea</h2>
+      <button class="panel-close" id="panelClose" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <form id="taskForm">
+      <input type="hidden" id="taskId">
+
+      <label class="field-label" for="taskText">¿Qué hay que hacer?</label>
+      <input type="text" id="taskText" class="field-input field-title" placeholder="Escribir aquí…" required autocomplete="off">
+
+      <div class="field-row">
+        <div>
+          <label class="field-label" for="taskDate">Fecha</label>
+          <input type="date" id="taskDate" class="field-input" required>
         </div>
-    </section>
-    <script src="./js/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+        <div>
+          <label class="field-label" for="taskTime">Hora</label>
+          <input type="time" id="taskTime" class="field-input">
+        </div>
+      </div>
 
+      <label class="field-label">Prioridad</label>
+      <div class="priority-picker" id="priorityPicker">
+        <button type="button" class="priority-dot" data-priority="low" title="Baja"></button>
+        <button type="button" class="priority-dot" data-priority="medium" title="Media"></button>
+        <button type="button" class="priority-dot" data-priority="high" title="Alta"></button>
+      </div>
+
+      <label class="field-label" for="taskNotes">Notas (opcional)</label>
+      <textarea id="taskNotes" class="field-input" rows="3" placeholder="Detalles, enlaces, contexto…"></textarea>
+
+      <div class="panel-actions">
+        <button type="button" class="btn-ghost" id="btnDeleteTask">Eliminar</button>
+        <button type="submit" class="btn-solid">Guardar tarea</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="panel-overlay" id="panelOverlay"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="./js/app.js"></script>
 </body>
-
 </html>
