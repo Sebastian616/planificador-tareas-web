@@ -315,25 +315,6 @@ async function refresh() {
 async function init() {
   renderHeaderDate();
   await refresh();
-
-  // datos de ejemplo la primera vez que se abre la app
-  if (allTasks.length === 0) {
-    await Store.create({
-      text: "Definir alcance del planificador",
-      date: todayISO(),
-      time: "10:00",
-      notes: "Frontend primero, backend después",
-      priority: "high",
-    });
-    await Store.create({
-      text: "Revisar diseño con el equipo",
-      date: todayISO(),
-      time: "16:00",
-      notes: "",
-      priority: "medium",
-    });
-    await refresh();
-  }
 }
 
 init();
